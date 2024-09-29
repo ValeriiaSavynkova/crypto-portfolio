@@ -1,0 +1,20 @@
+extends ../layout.pug
+include ../mixins/inputWithDatalist.pug
+
+block scripts
+  script(src="/scripts/getConvert.js")
+
+block content
+  label= 'Amount:'
+  input(type="text", name='Amount', id='amount')
+  +inputWithDatalist('From:', 'from-currency-choice', 'from-currency-choice', 
+  'allCurrencies', allCurrencies)
+  +inputWithDatalist('To:', 'to-currency-choice', 'to-currency-choice', 'allCurrencies', allCurrencies)
+  div
+   button(onClick="getConvert()")= 'Convert'
+  p(id="result")= result
+  
+
+  
+
+

@@ -1,0 +1,10 @@
+extends ../layout.pug
+include ../mixins/inputWithDatalist.pug
+
+block content
+  if pageTitle === 'Supported Currencies'
+    +inputWithDatalist('Choose a currency:', 'currency-choice', 'currency-choice', 
+    'currencies', physicalCurrencies)
+  else if pageTitle === 'Supported Crypto Currencies'
+    +inputWithDatalist('Choose a currency:', 'crypto-currency-choice',         
+    'crypto-currency-choice', 'cryptoCurrencies', cryptoCurrencies)

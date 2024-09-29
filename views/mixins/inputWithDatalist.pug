@@ -1,0 +1,7 @@
+mixin inputWithDatalist(labelText, inputName, inputId, datalistId, options)
+  label(for=inputId)= labelText
+  input(type="text", name=inputName, id=inputId, list=datalistId)
+  datalist(id=datalistId)
+    each val, key in options
+      option(value=key)= val
+

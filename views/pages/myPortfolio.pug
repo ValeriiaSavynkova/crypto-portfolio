@@ -1,0 +1,117 @@
+extends ../layout.pug
+include ../mixins/inputWithDatalist.pug
+
+
+block head
+  link(rel="stylesheet", href="/styles/myPortfolio.css")
+
+
+
+block content
+    div.content-wrapper
+      h1='Your Assets'
+      table(id='mainTable')
+        thead
+          tr
+            each key in headersOfMainTable
+              th= key
+             
+        tbody
+          each record in records
+             tr(data-id=record.name)
+                  each value, key in record
+                    if key === 'currentPrice'
+                      td= `$${value}`
+                    else if key === 'holdings'
+                      td
+                        div=`$${value[1]}`  
+                        p= `${value[0]} ${record.name}`
+                    else
+                      td= value  
+                  tr(class="subrecords" id=`subrecords-${record.name}`)
+                     td(colspan= headersOfMainTable.length)
+                        table(class='subtable')
+                            thead
+                              tr
+                                each key in headersOfSubTable
+                                  th= key
+                   
+                            tbody
+                              each subrecord in subrecords[record.name]
+                                tr
+                                  each value, key in subrecord
+                                    if key === 'Total' && subrecord['From'] ===                                         'USD'
+                                      td=`$${value[1]}`                              
+                                    else if key === 'Total'
+                                      td
+                                        div=`${value[0][0]} ${value[0][1]}`  
+                                        p= `$${value[1]}`
+                                    else if key === 'Amount'
+                                      td=`+ ${value} ${record.name}`
+                                    else
+                                      td= value         
+    
+  
+      //-
+        form(method="POST", action="/my-portfolio")
+        label= 'Amount:'
+        input(type="text", name='amount', id='amount')
+        +inputWithDatalist('From:', 'from', 'from-currency-choice', 
+        'allCurrencies', allCurrencies)
+        +inputWithDatalist('To:', 'to', 'to-currency-choice', 
+        'allCurrencies', allCurrencies)
+        label(for="datePicker")= 'Date:'
+        input(type="date" id="datePicker" name="date" min="2015-01-01" 
+         max="2024-12-31")
+        div
+          button= 'Add Transaction'
+                 
+        div
+        p(id="result")
+      //
+      button(id="openFormBtn")= 'Add Transaction'
+  
+    div#modal.modal
+      div.modal-content
+        h2= 'Add Transaction'
+        form(id="transactionForm" method="POST" action="/my-portfolio")
+          div
+            label(for="transactionType") Transaction Type:
+            select(id="transactionType" name="transactionType")
+              option(value="buy") Buy
+              option(value="sell") Sell
+              option(value="transfer") Transfer
+      
+          div
+            +inputWithDatalist('From:', 'from', 'from-currency-choice', 
+            'allCurrencies', allCurrencies )
+          div
+            +inputWithDatalist('To:', 'to', 'to-currency-choice', 
+            'allCurrencies', allCurrencies )
+              
+          div
+            label(for="datePicker")= 'Date:'
+            input(type="datetime-local" id="datePicker" value=`${today}`                          name="date"  min="2015-01-01T00:00" max=`${today}`)
+      
+          div
+            label(for="rate") Price Per Coin:
+            input(type="number" value='0' id="rate" name="rate" step="any" )
+           
+          input(type="hidden" id="rate-to-usd" name="rate-to-usd")  
+
+          div
+            label(for="total") Total Spent:
+            input(type="number" value='0' id="total" name="total" step="any")
+          
+          div
+            label(for="quantity") Quantity:
+            input(type="number" value='0' id="quantity" name="quantity" step="any")
+      
+          div    
+            button(id='closeFormBtn')= 'Add Transaction'
+            button(type="button" id="closeModal")= 'Cancel'
+    div#overlay
+
+    
+  
+    script(src="/scripts/myPortfolio.js")

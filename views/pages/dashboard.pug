@@ -1,0 +1,18 @@
+extends ../layout.pug
+
+block head
+  link(rel="stylesheet", href="/styles/dashboard.css")
+  
+block content
+    table
+      thead
+        tr
+          each key in headers
+            th= key
+          th='Total'  
+      tbody
+        each record in records
+          tr
+            each value in record
+              td= value
+            td= (record['Rate'] * record['Amount']).toFixed(2)

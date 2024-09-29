@@ -1,0 +1,35 @@
+extends ../layout.pug
+include ../mixins/inputWithDatalist.pug
+
+block head
+ link(rel="stylesheet", href="/styles/dashboard.css")
+
+block scripts
+  script(src="/scripts/postRecord.js")
+
+block content
+  table(id='myDashboard')
+    thead
+      tr
+        each key in headers
+           th= key
+        th='Total'  
+    tbody
+       each record in records
+        tr
+          each value in record
+             td= value
+          td= (record['Rate'] * record['Amount']).toFixed(2)
+        
+  label= 'Amount:'
+  input(type="text", name='Amount', id='amount')
+  +inputWithDatalist('From:', 'from-currency-choice', 'from-currency-choice', 
+    'allCurrencies', allCurrencies)
+  +inputWithDatalist('To:', 'to-currency-choice', 'to-currency-choice', 
+    'allCurrencies', allCurrencies)
+  div
+   button(onClick="postRecord()")= 'Add'
+  div
+    p(id="result")
+  
+
